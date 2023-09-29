@@ -2,11 +2,16 @@
 
 set -euxo pipefail
 
-insecure_option=""
+MC_OPTS=""
 if [[ "$MINIO_INSECURE" == "true" ]]; then
-  insecure_option="--insecure"
+  MC_OPTS="$MC_OPTS --insecure"
 fi
 
-mc alias set ${insecure_option:+"$insecure_option"} deploy "$MINIO_ENDPOINT" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+MC_MIRROR_OPTS=""
+if [[ "$MINIO_REMOVE" == "true" ]]; then
+  MC_MIRROR_OPTS="$MC_OPTS --remove"
+fi
 
-mc mirror --overwrite ${insecure_option:+"$insecure_option"} $1 "deploy/$2"
+mc alias set ${MC_OPTS} deploy "$MINIO_ENDPOINT" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+
+mc mirror --overwrite ${MC_MIRROR_OPTS} $1 "deploy/$2"

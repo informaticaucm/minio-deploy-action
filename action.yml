@@ -26,6 +26,10 @@ inputs:
     description: 'Trust SSL certificates with minio --insecure option'
     required: false
     default: 'false'
+  remove:
+    description: 'Remove files from destination not existing in source --remove option'
+    required: false
+    default: 'false'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -34,6 +38,7 @@ runs:
     MINIO_ACCESS_KEY: ${{ inputs.access_key }}
     MINIO_SECRET_KEY: ${{ inputs.secret_key }}
     MINIO_INSECURE: ${{ inputs.insecure }}
+    MINIO_REMOVE: ${{ inputs.remove }}
   args:
     - ${{ inputs.source_dir }}
     - '${{ inputs.bucket }}${{ inputs.target_dir }}'
